@@ -14,6 +14,22 @@ const randomFunc = {
     symbol: getRandomSymbol
 }
 
+clipboardEl.addEventListener("click", () => {
+    const textarea = document.createElement("textarea");
+    const password = resultEl.innerText;
+
+    if(!password) {
+        return;
+    }
+
+    textarea.value = password;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+    alert("Password copied to clipboard");
+})
+
 generateEl.addEventListener("click", () => {
     const length = +lengthEl.value; //the + sign converts string to num
     const hasUpper = uppercaseEl.checked;
@@ -28,7 +44,7 @@ function generatePassword(upper, lower, number, symbol, length) {
     let generatedPassword = '';
     const typesCount = upper + lower + number + symbol;
     const typesArr = [{upper}, {lower}, {number}, {symbol}]
-    .filter(item => Object.values(item)[0])
+    .filter(item => Object.values(item)[0]);
     
     if(typesCount === 0) {
         return '';
@@ -38,11 +54,13 @@ function generatePassword(upper, lower, number, symbol, length) {
         typesArr.forEach(type => {
             const funcName = Object.keys(type)[0]
             generatedPassword += randomFunc[funcName]();
-        })
+        });
     }
 
-    const finalPassword = generatedPassword.slice(0, length);
-        return generatedPassword;
+    const tempPassword = generatedPassword.slice(0, length);
+    console.log(tempPassword);
+    const finalPassword = shufflePassword(tempPassword);
+    return finalPassword;
 }
 
 function getRandomLower() {
@@ -60,4 +78,18 @@ function getRandomNumber() {
 function getRandomSymbol() {
     const symbols = '!@#$%^&*(){}[]=<>/,.';
     return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function shufflePassword(password) {
+    const passwordArr = password.split("")
+    let currentIndex = password.length;
+
+    while(currentIndex !== 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        let temp = passwordArr[currentIndex];
+        passwordArr[currentIndex] = passwordArr[randomIndex];
+        passwordArr[randomIndex] = temp;
+    }
+    return passwordArr;
 }
