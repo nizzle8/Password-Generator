@@ -91,5 +91,6 @@ function shufflePassword(password) {
         passwordArr[currentIndex] = passwordArr[randomIndex];
         passwordArr[randomIndex] = temp;
     }
-    return passwordArr;
+    const finalPassword = passwordArr.join("");
+    return finalPassword;
 }
